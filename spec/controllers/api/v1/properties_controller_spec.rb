@@ -95,4 +95,12 @@ RSpec.describe Api::V1::PropertiesController, type: :controller do
 		end
 	end
 
+	describe "#service_stats" do
+		it "As a Requestor When I ask for information about the service Then I should get back the state of the service And I should get back some stats on the service" do
+			get :service_stats, format: :json
+			response_data = JSON.parse(response.body)
+			response_data["status"].should == 200
+		end
+	end
+
 end
