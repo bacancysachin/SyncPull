@@ -4,8 +4,8 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.4'
 # Use mysql as the database for Active Record
-gem 'mysql2'
-# gem 'pg'
+# gem 'mysql2'
+gem 'pg'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
 # Use Uglifier as compressor for JavaScript assets
@@ -31,6 +31,7 @@ gem 'pry'
 gem 'rest_client'
 gem 'will_paginate'
 gem 'whenever', :require => false
+gem 'typhoeus'
 
 group :development, :test do
   gem "rspec-rails", ">= 2.12.2"
@@ -43,6 +44,7 @@ group :development, :test do
   gem "shoulda-matchers"
   gem 'rspec-core'
   gem 'vcr'
+  # gem 'webmock'
 end
 
 group :development do

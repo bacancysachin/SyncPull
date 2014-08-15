@@ -27,17 +27,17 @@ class Api::V1::PropertiesController < ApplicationController
 
 	def create
 		property_limit_for_day = Property.where(created_at: Date.today).all
-		if property_limit_for_day.count >= 800 
+		if property_limit_for_day.count <= 800 
 			response = Zillow.get_deep_search_result(params)
 			if response.present?
 				response_status = response["searchresults"]["message"] if response
-				property_info = response["searchresults"]["response"]["results"]["result"] if response
 				if (response_status["code"].eql?("0") && response_status["text"].eql?("Request successfully processed"))
+					property_info = response["searchresults"]["response"]["results"]["result"]
 					property = Property.where(lat: property_info["address"]["latitude"], lng: property_info["address"]["longitude"], created_at: Time.now..Time.now-90.day).first
 					if property
 						render json: { status: 200, message: "Request successfull", property: property.as_json }
 					else
-						property = Property.create(requested_at: Time.now, lat: property_info["address"]["latitude"], lng: property_info["address"]["longitude"], year_built: property_info["yearBuilt"], usecode: property_info["useCode"], last_sold_on: property_info["lastSoldDate"], last_sold_price: property_info["lastSoldPrice"], tax_assesment_year: property_info["taxAssessmentYear"], tax_assesment_amount: property_info["taxAssessment"], zestimate_price: property_info["zestimate"]["amount"], zestimate_value_range_high: property_info["zestimate"]["valuationRange"]["hign"], zestimate_value_range_low: property_info["zestimate"]["valuationRange"]["low"], zastimate_last_updated_on: property_info["zestimate"]["last_updated"], lot_size: property_info["lotSizeSqFt"], house_size: property_info["localRealEstate"]["region"]["zindexValue"], zpid: property_info["zpid"], processed: true)
+						property = Property.create(requested_at: Time.now, lat: property_info["address"]["latitude"], lng: property_info["address"]["longitude"], year_built: property_info["yearBuilt"], usecode: property_info["useCode"], last_sold_on: Date.strptime(property_info["lastSoldDate"], "%m/%d/%Y"), last_sold_price: property_info["lastSoldPrice"], tax_assesment_year: property_info["taxAssessmentYear"], tax_assesment_amount: property_info["taxAssessment"], zestimate_price: "", zestimate_value_range_high: "", zestimate_value_range_low: "", zastimate_last_updated_on: Date.strptime(property_info["zestimate"]["last_updated"], "%m/%d/%Y"), lot_size: property_info["lotSizeSqFt"], house_size: property_info["localRealEstate"]["region"]["zindexValue"], zpid: property_info["zpid"], processed: true)
 						if property
 							render json: { status: 200, message: "Request successfull", property_info: property.as_json }
 						else
@@ -45,7 +45,7 @@ class Api::V1::PropertiesController < ApplicationController
 						end
 					end
 				else
-					render json: { response: response }
+					render json: { status: response_status["code"], message: response_status["text"] }
 				end
 			else
 				render json: { status: 406, message: "Invalid address" }
@@ -61,7 +61,7 @@ class Api::V1::PropertiesController < ApplicationController
 	# commit branch - json/json/3_Address_CRUD (Address CRUD)
 
 	def show
-		property = Property.find_by_request_id[params[:id]]
+		property = Property.find_by_request_id(params[:id])
 		if property
 			render json: { status: 200, message: "Request successfull", property: property.as_json }
 		else
@@ -105,11 +105,11 @@ class Api::V1::PropertiesController < ApplicationController
 	# commit branch - json/5_Service_status_info
 
 	def service_stats
-		request_today = Property.where(created_at: date.today).count
+		request_today = Property.where(created_at: Date.today).count
 		request_remaining = Property.where(processed: false).count
 		last_request = Property.last.created_at.to_i
 		requests_yesterday = Property.where(created_at: Date.today-1.day).count
-		requests_this_week - Property.where(created_at: Date.today..Date.today-7.days).count
+		requests_this_week = Property.where(created_at: Date.today..Date.today-7.days).count
 		requests_last_week = Property.where(created_at: Date.today-7.days..Date.today-14.days).count
 		requests_this_month = Property.where(created_at: Date.today..Date.today-30.days).count
 		requests_last_month = Property.where(created_at: Date.today-30.days..Date.today-60.days).count
