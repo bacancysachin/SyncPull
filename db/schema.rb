@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140815090547) do
+ActiveRecord::Schema.define(version: 20140815101204) do
 
   create_table "properties", force: true do |t|
     t.string   "request_id"
@@ -29,8 +29,9 @@ ActiveRecord::Schema.define(version: 20140815090547) do
     t.integer  "zestimate_value_range_low"
     t.datetime "zastimate_last_updated_on"
     t.integer  "lot_size"
-    t.integer  "house_size"
+    t.string   "house_size"
     t.integer  "zpid"
+    t.boolean  "processed"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
