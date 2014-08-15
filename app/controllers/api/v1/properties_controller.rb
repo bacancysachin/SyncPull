@@ -99,6 +99,23 @@ class Api::V1::PropertiesController < ApplicationController
 		end
 	end
 
+	# Author -      Sachin Gevariya
+	# Description - Get service stats
+	# Created on -  5 august 2014
+	# commit branch - json/5_Service_status_info
 
+	def service_stats
+		request_today = Property.where(created_at: date.today).count
+		request_remaining = Property.where(processed: false).count
+		last_request = Property.last.created_at.to_i
+		requests_yesterday = Property.where(created_at: Date.today-1.day).count
+		requests_this_week - Property.where(created_at: Date.today..Date.today-7.days).count
+		requests_last_week = Property.where(created_at: Date.today-7.days..Date.today-14.days).count
+		requests_this_month = Property.where(created_at: Date.today..Date.today-30.days).count
+		requests_last_month = Property.where(created_at: Date.today-30.days..Date.today-60.days).count
+		render json: { status: 200, response: { request_today: request_today, request_remaining: request_remaining,
+					last_request: last_request, requests_yesterday: requests_yesterday, requests_this_week: requests_this_week,
+					requests_last_week: requests_last_week, requests_this_month: requests_this_month, requests_last_month: requests_last_month }}
+	end
 
 end
