@@ -30,6 +30,7 @@ gem 'spring',        group: :development
 gem 'pry'
 gem 'rest_client'
 gem 'will_paginate'
+gem 'whenever', :require => false
 
 group :development, :test do
   gem "rspec-rails", ">= 2.12.2"
