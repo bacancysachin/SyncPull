@@ -29,6 +29,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 gem 'pry'
 gem 'rest_client'
+gem 'will_paginate'
 
 group :development, :test do
   gem "rspec-rails", ">= 2.12.2"

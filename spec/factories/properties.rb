@@ -19,5 +19,6 @@ FactoryGirl.define do
     lot_size 1
     house_size 1
     zpid 1
+    processed true
   end
 end
