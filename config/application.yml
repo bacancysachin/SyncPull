@@ -1,0 +1,8 @@
+application_name: "SyncPull"
+application_tagline: "SyncPull"
+support_email: ""
+admin_email: ""
+meta_description: ''
+application_constants:
+  zillow_web_service_id: 'X1-ZWz1dvv0dq998r_3qukz'
+  zillow_api_url: 'http://www.zillow.com/webservice/GetDeepSearchResults.htm'
