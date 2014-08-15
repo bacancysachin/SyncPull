@@ -4,9 +4,10 @@
 # commit branch - json/2_setup_libraries (Setup libraries, services, objects, etc that will be used to access Zillow.com #2)
 
 module Zillow
-  	def self.get_deep_search_result(search_keyword)
+  	def self.get_deep_search_result(params)
+      data = params[:property]
       begin
-        url = url = AppConfig.application_constants["zillow_api_url"] + "?zws-id=" + AppConfig.application_constants["zillow_web_service_id"] + "&address=#{search_keyword["address"]}" + "&citystatezip=#{search_keyword["city"]}"
+        url = url = AppConfig.application_constants["zillow_api_url"] + "?zws-id=" + AppConfig.application_constants["zillow_web_service_id"] + "&address=#{data["address"]}" + "&citystatezip=#{data["city"]}"
         url = url.gsub(" ", "%2c")
         res = RestClient.get url
         res = Hash.from_xml(res)

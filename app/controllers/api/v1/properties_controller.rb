@@ -2,6 +2,11 @@ class Api::V1::PropertiesController < ApplicationController
 	respond_to :josn
 	include Zillow
 
+	# Author -      Sachin Gevariya
+	# Description - It fetchs the requestes on the basis of provided parameters
+	# Created on -  5 august 2014
+	# commit branch - json/json/3_Address_CRUD (Address CRUD)
+	
 	def index		
 		if params[:start_date].present?
 			properties = Property.paginate(page: params[:page], per_page: 50).where(created_at: params[:start_date].to_date..Time.now+1.day)
@@ -14,6 +19,11 @@ class Api::V1::PropertiesController < ApplicationController
 		end
 		render json: { status: 200, message: "Request successfull", properties: properties.as_json }
 	end
+
+	# Author -      Sachin Gevariya
+	# Description - Create method fetches property details from Zillow API and saved the required data into database
+	# Created on -  5 august 2014
+	# commit branch - json/json/3_Address_CRUD (Address CRUD)
 
 	def create
 		property_limit_for_day = Property.where(created_at: Date.today).all
@@ -41,6 +51,11 @@ class Api::V1::PropertiesController < ApplicationController
 		end
 	end
 
+	# Author -      Sachin Gevariya
+	# Description - It fetchd the request details of a valid request
+	# Created on -  5 august 2014
+	# commit branch - json/json/3_Address_CRUD (Address CRUD)
+
 	def show
 		property = Property.find_by_request_id[params[:id]]
 		if property
@@ -49,6 +64,11 @@ class Api::V1::PropertiesController < ApplicationController
 			render json: { status: 404, message: "Request not found"}
 		end
 	end
+
+	# Author -      Sachin Gevariya
+	# Description - Updates a valid request
+	# Created on -  5 august 2014
+	# commit branch - json/json/3_Address_CRUD (Address CRUD)
 
 	def update
 		property = Property.where(request_id: params[:id], created_at: Time.now..Time.now-90.day).first
@@ -59,6 +79,11 @@ class Api::V1::PropertiesController < ApplicationController
 			render json: { status: 404, message: "Request not found"}
 		end
 	end
+
+	# Author -      Sachin Gevariya
+	# Description - Deletes a valid request
+	# Created on -  5 august 2014
+	# commit branch - json/json/3_Address_CRUD (Address CRUD)
 
 	def destroy
 		property = Property.find_by_request_id(params[:id])
